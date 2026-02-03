@@ -1,0 +1,13 @@
+Identifier,Name,Age,ZipCode,Diagnosis
+1,John Smith,20,1001,Diabetes
+2,Jane Doe,21,1002,Flu
+3,Alice Brown,22,1003,Cancer
+4,Bob Johnson,23,1006,Hypertension
+5,Charlie Davis,24,1008,Allergy
+6,David Evans,25,1009,Diabetes
+7,Eva Frank,26,1001,Flu
+8,Frank Green,27,1002,Cancer
+9,Grace Hall,28,1003,Hypertension
+10,Henry Ivy,29,1005,Allergy
+11,Ayaz,30,1008,Allergy
+12,Parth,30,1006,Allergy

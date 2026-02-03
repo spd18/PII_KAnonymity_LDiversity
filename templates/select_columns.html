@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configure Anonymization</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .hierarchy-type {
+            min-width: 160px;
+        }
+        .hierarchy-level {
+            min-width: 180px;
+        }
+        select:invalid {
+            color: #6c757d;
+        }
+        select option {
+            color: #212529;
+        }
+        .preview-card {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: white;
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Data Anonymizer</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Back button -->
+        <!-- <a href="javascript:history.back()" class="btn btn-secondary back-btn">
+            <i class="bi bi-arrow-left"></i> Back
+        </a> -->
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-dismissible alert-danger mb-4">
+              {% for message in messages %}
+                <div>{{ message }}</div>
+              {% endfor %}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h2 class="h5 mb-0">
+                    <i class="bi bi-table me-2"></i>Original Data Preview
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="preview-card">
+                    {{ original_preview|safe }}
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h2 class="h5 mb-0">
+                        <i class="bi bi-gear me-2"></i>Anonymization Settings
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Anonymization Method</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="method" id="k_anonymity" value="k_anonymity" checked>
+                                <label class="form-check-label" for="k_anonymity">K-Anonymity</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="method" id="l_diversity" value="l_diversity">
+                                <label class="form-check-label" for="l_diversity">L-Diversity</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="k" class="form-label">k value</label>
+                            <input type="number" class="form-control" name="k" min="1" value="3" required>
+                        </div>
+                        <div class="col-md-4" id="l_div_container" style="display: none;">
+                            <label for="l_div" class="form-label">l value</label>
+                            <input type="number" class="form-control" name="l_div" min="1" value="2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="supp_level" class="form-label">Suppression Level</label>
+                            <input type="number" class="form-control" name="supp_level" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h2 class="h5 mb-0">
+                        <i class="bi bi-columns-gap me-2"></i>Column Configuration
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="colTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Type</th>
+                                    <th>Role</th>
+                                    <th>Hierarchy Type</th>
+                                    <th>Hierarchy Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for col in columns %}
+                                <tr>
+                                    <td>{{ col }}</td>
+                                    <td>{{ col_types[col] }}</td>
+                                    <td>
+                                        <select name="{{ col }}_role" class="form-select">
+                                            <option value="none">Ignore</option>
+                                            <option value="quasi">Quasi-Identifier</option>
+                                            <option value="ident">Identifier</option>
+                                            <option value="sensitive">Sensitive</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="hier_type_{{ loop.index0 }}" 
+                                                id="hier_type_{{ loop.index0 }}" 
+                                                class="form-select hierarchy-type">
+                                            <option value="none">None</option>
+                                            <option value="masking">Masking</option>
+                                            <!-- <option value="interval">Interval Grouping</option> -->
+                                            <option value="default">Default Hierarchy</option>
+                                            <option value="custom">Custom Hierarchy</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="hier_level_{{ loop.index0 }}"
+                                                id="hier_level_{{ loop.index0 }}"
+                                                class="form-select hierarchy-level"
+                                                data-max-len="{{ max_len_map[col] }}"
+                                                data-col-type="{{ col_types[col] }}"
+                                                data-col-name="{{ col }}">
+                                            <option value="none">Select type first</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Hierarchy Modals moved inside the form -->
+            {% for col in columns %}
+            <div class="modal fade" id="customHierarchyModal{{ loop.index0 }}" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Custom Hierarchy for {{ col }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label class="form-label">
+                        Enter hierarchy levels (one value per line, comma-separated levels):
+                      </label>
+                      <textarea class="form-control" rows="5" 
+                                name="custom_hier_{{ loop.index0 }}"
+                                placeholder="Male,Human&#10;Female,Human"></textarea>
+                      <small class="text-muted">
+                        Example:<br>Male,Human<br>Female,Human
+                      </small>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-end mb-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-gear-wide-connected me-2"></i>Process Data
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle L-Diversity field
+        const lRadio = document.getElementById('l_diversity');
+        const kRadio = document.getElementById('k_anonymity');
+        const lDivContainer = document.getElementById('l_div_container');
+        
+        function toggleLDiv() {
+            lDivContainer.style.display = lRadio.checked ? 'block' : 'none';
+        }
+        
+        if (lRadio && kRadio) {
+            lRadio.addEventListener('change', toggleLDiv);
+            kRadio.addEventListener('change', toggleLDiv);
+            toggleLDiv();
+        }
+        
+        // Update hierarchy level options
+        function updateHierarchyLevel(index) {
+            const typeSelect = document.getElementById(`hier_type_${index}`);
+            const levelSelect = document.getElementById(`hier_level_${index}`);
+            const colName = levelSelect.dataset.colName;
+            const colType = levelSelect.dataset.colType;
+            const maxLen = parseInt(levelSelect.dataset.maxLen) || 10;
+            
+            levelSelect.innerHTML = '';
+            
+            if (typeSelect.value === "masking") {
+                // Masking options
+                // const maxMask = Math.min(maxLen, 5);
+                // for (let i = 0; i <= maxMask; i++) {
+                //     const opt = new Option(`Mask last ${i} ${i === 1 ? 'char' : 'chars'}`, i);
+                //     levelSelect.add(opt);
+                // }
+                const opt = new Option("Masking", "masking");
+                levelSelect.add(opt);
+            } 
+            else if (typeSelect.value === "interval") {
+                // Smart interval options based on column name and type
+                const numericIntervals = {
+                    'Age': [1, 5, 10, 15, 20],
+                    'Income': [1000, 5000, 10000, 25000, 50000],
+                    'default': [1, 2, 5, 10, 20, 50]
+                };
+                
+                const intervals = colType === "numeric" 
+                    ? (numericIntervals[colName] || numericIntervals['default'])
+                    : [1, 2, 3, 5];
+                
+                intervals.forEach(interval => {
+                    const opt = new Option(`Group by ${interval}`, interval);
+                    levelSelect.add(opt);
+                });
+            }
+            else if (typeSelect.value === "default") {
+                const opt = new Option("Use built-in hierarchy", "default");
+                levelSelect.add(opt);
+            }
+            else if (typeSelect.value === "custom") {
+                const opt = new Option("Click to configure...", "custom");
+                levelSelect.add(opt);
+                levelSelect.onfocus = () => {
+                    const modal = new bootstrap.Modal(
+                        document.getElementById(`customHierarchyModal${index}`)
+                    );
+                    modal.show();
+                };
+            }
+            else {
+                levelSelect.add(new Option("No hierarchy", "none"));
+            }
+        }
+
+        // Initialize all hierarchy selects
+        document.querySelectorAll('[id^="hier_type_"]').forEach((select, index) => {
+            select.addEventListener('change', () => updateHierarchyLevel(index));
+            updateHierarchyLevel(index);
+        });
+
+        // Show loading state on form submit
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                submitBtn.disabled = true;
+            }
+        });
+    });
+    </script>
+</body>
+</html>

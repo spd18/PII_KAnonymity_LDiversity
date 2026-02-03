@@ -1,0 +1,10 @@
+Name,age,ZIP,Disease,Education,Location,Decimal,credit
+Alice,29,47677,Heart Disease,12th,"Sault Ste. Marie, ON, P6A",1115.58,1451 1236 1545 1576
+Bob,22,47602,Heart Disease,10th,"Sault Ste. Marie, ON, P6A",1161.96,1478 4156 4844 4886
+Charly,27,47698,Heart Disease,10th,"Sault Ste. Marie, ON, P6A",1208.34,1445 5654 6554 6544
+Dave,43,47905,Flu,Bacherlors,"Toronto, ON, M5A",1254.72,1452 1236 1545 1576
+Eve,52,47909,Heart Disease,Bacherlors,"Toronto, ON, M5A",1301.14,1479 4156 4844 4886 
+Ferris,47,47906,Cancer,Bacherlors,"Sault Ste. Marie, ON, P6A",1347.48,1446 5654 6554 6544
+George,30,47605,Heart Disease,Masters,"Sault Ste. Marie, ON, P6A",1393.86,1453 1236 1545 1576
+Harvey,36,47673,Cancer,Masters,"Toronto, ON, M5A",1440.24,1480 4156 4844 4886 
+Iris,32,47607,Cancer,Masters,"Montreal, QC, H2A",1486.62,1447 5654 6554 6544

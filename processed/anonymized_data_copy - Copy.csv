@@ -1,0 +1,11 @@
+index,Identifier,Name,Age,ZipCode,Diagnosis
+0,1,*,20-29,100*,Diabetes
+1,2,*,20-29,100*,Flu
+2,3,*,20-29,100*,Cancer
+3,4,*,20-29,100*,Hypertension
+4,5,*,20-29,100*,Allergy
+5,6,*,20-29,100*,Diabetes
+6,7,*,20-29,100*,Flu
+7,8,*,20-29,100*,Cancer
+8,9,*,20-29,100*,Hypertension
+9,10,*,20-29,100*,Allergy

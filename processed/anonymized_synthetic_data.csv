@@ -1,0 +1,7 @@
+ID,Age,Gender,ZipCode,Occupation
+1,32,F,1234*,Engineer
+2,34,F,1234*,Engineer
+3,36,F,1234*,Engineer
+4,42,M,5432*,Doctor
+5,44,M,5432*,Doctor
+6,45,M,5432*,Doctor

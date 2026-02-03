@@ -1,0 +1,7 @@
+index,Name,age,ZIP,Disease,Education,Location,Decimal,credit
+1,*,"[20, 40)",4760*,Heart Disease,10th,"Sault Ste. Marie, ON, P6A",1161.96,1478 4156 4844 4886
+3,*,"[40, 60)",4790*,Flu,Bacherlors,"Toronto, ON, M5A",1254.72,1452 1236 1545 1576
+4,*,"[40, 60)",4790*,Heart Disease,Bacherlors,"Toronto, ON, M5A",1301.14,1479 4156 4844 4886 
+5,*,"[40, 60)",4790*,Cancer,Bacherlors,"Sault Ste. Marie, ON, P6A",1347.48,1446 5654 6554 6544
+6,*,"[20, 40)",4760*,Heart Disease,Masters,"Sault Ste. Marie, ON, P6A",1393.86,1453 1236 1545 1576
+8,*,"[20, 40)",4760*,Cancer,Masters,"Montreal, QC, H2A",1486.62,1447 5654 6554 6544

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload CSV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .upload-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Data Anonymizer</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Back button -->
+        <!-- <a href="javascript:history.back()" class="btn btn-secondary back-btn">
+            <i class="bi bi-arrow-left"></i> Back -->
+        </a>
+        <div class="upload-container">
+            <h1 class="h3 mb-4 text-center">
+                <i class="bi bi-file-earmark-arrow-up me-2"></i>Upload CSV File
+            </h1>
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-dismissible alert-danger">
+                  {% for message in messages %}
+                    <div>{{ message }}</div>
+                  {% endfor %}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endif %}
+            {% endwith %}
+            
+            <form method="post" enctype="multipart/form-data" class="mt-4">
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label">Select CSV File</label>
+                    <input class="form-control" type="file" id="fileInput" name="file" accept=".csv" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload me-2"></i>Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
