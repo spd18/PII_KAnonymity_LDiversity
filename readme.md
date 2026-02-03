@@ -18,7 +18,7 @@ Before running the project, ensure you have the following installed:
 
 ### Step 1: Clone the GitHub Repository  
 ```sh
-git clone https://github.com/ayazmarediya03/Cyber-Project
+git clone [https://github.com/spd18/PII_KAnonymity_LDiversity]
 ```
 
 ### Step 2: Navigate to the Project Directory  
